@@ -1,0 +1,19 @@
+#!/usr/bin/make -f
+
+export PYBUILD_DESTDIR_python2=debian/python-simplejson/
+export PYBUILD_DESTDIR_python2-dbg=debian/python-simplejson-dbg/
+export PYBUILD_DESTDIR_python3=debian/python3-simplejson/
+export PYBUILD_DESTDIR_python3-dbg=debian/python3-simplejson-dbg/
+export PYBUILD_DESTDIR_pypy=debian/pypy-simplejson/
+
+%:
+	dh $@ --with python2,python3,pypy,sphinxdoc --buildsystem=pybuild
+
+build-indep:
+	dh_testdir
+	dh_installdirs
+	sphinx-build -N -q -E -b html . \
+	 $(CURDIR)/debian/python-simplejson-doc/usr/share/doc/python-simplejson-doc/
+
+override_dh_sphinxdoc:
+	dh_sphinxdoc -p python-simplejson-doc
